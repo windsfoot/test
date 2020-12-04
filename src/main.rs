@@ -71,28 +71,29 @@ impl HUICE {
         HUICE { data: dat }
     }
 
-    //fn parse(总数据表:Vec<Row>,单标志序号:u32)->(次数：u32,胜率：f64,盈亏比：f64，单信号累积：f64){}
-    fn parse<T>(&self, tem: Vec<CSVDATA>) -> (u32, f64, f64, f64) {
+    //fn parse(筛后数据表:Vec<Row>,)->(总次数：u32,胜次，亏次，胜率：f64,盈亏比：f64，单信号累积：f64){}
+    fn parse<T>(&self, tem: Vec<CSVDATA>) -> (u32, u32, u32, f64, f64, f64) {
         let no = tem.len();
 
         let mut sum = 0.0;
-        let mut win = 0.0;
-        let mut loss = 0.0;
+        let mut win = 0;
+        let mut loss = 0;
         let mut w_sum = 0.0;
-        let mut l_sum = 0.0;
+        let mut l_sum = 0.0; 
+
         for i in tem {
-            l_sum+=i.隔日盈亏;
+            sum += i.隔日盈亏;
             if i.隔日盈亏 > 0.0 {
-                win+=1.0;
-                w_sum+=i.隔日盈亏;
+                win += 1;
+                w_sum += i.隔日盈亏;
             } else if i.隔日盈亏 < 0.0 {
-                loss+=1.0;
-                l_sum-=i.隔日盈亏;
+                loss += 1;
+                l_sum -= i.隔日盈亏;
             }
         }
-        let sl:f64=win  /(win+loss)*100.0;
-        let ykb=w_sum/l_sum;
-        (no as u32, sl, ykb, sum)
+        let sl: f64 = win as f64 / (win as f64 + loss as f64) * 100.0;
+        let ykb = w_sum / l_sum;
+        (no as u32, win, loss, sl, ykb, sum)
     }
 }
 
