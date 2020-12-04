@@ -4,7 +4,7 @@ use serde::Deserialize;
 use std::{error::Error, print};
 
 #[derive(Deserialize)]
-struct Row {
+struct CSVDATA {
     日期: String,
     早盘多空: i32,
     早盘寒暖: i32,
@@ -37,43 +37,67 @@ struct Row {
     暮光: i32,
     曙光: i32,
     收盘寒暖: i32,
-    收信: i32,
     隔日盈亏: f64,
 }
 
-impl std::fmt::Display for Row {
+impl std::fmt::Display for CSVDATA {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "({},{},{})", self.日期, self.春,self.隔日盈亏)
+        write!(f, "({},{},{})", self.日期, self.春, self.隔日盈亏)
     }
 }
 
-
-fn main()  {
-    let r=rdr_from_file();
-    match r{
-        Ok(r)=>{parse(r,1);},
-        Err(_)=>{},
-    };
+struct HUICE {
+    data: Vec<CSVDATA>,
 }
 
-fn rdr_from_file() -> Result<Vec<Row>, Box<dyn Error>> {
-    let mut rdr = Reader::from_path("操作.csv")?;
-    let mut v:Vec<Row>=Vec::new();
-    for result in rdr.records() {
-        let mut record = result?;
-    
-        let row: Row = record.deserialize(None)?;
-      v.push(row);
-    }
-    Ok(v)
-}
-
-///fn parse(总数据表:Vec<Row>,单标志序号:u32)->(次数：u32,胜率：f64,盈亏比：f64，单信号累计：f64){}
-fn parse(dat:Vec<Row>,flag:u32)->(u32,f64,f64,f64){
-    for i in dat{
-        if i.春==1{
-            println!("{}",i);
+impl HUICE {
+    //读取文件创建结构
+    fn from_file() -> HUICE {
+        let mut dat = Vec::new();
+        let rdr = Reader::from_path("操作.csv"); //打开文件
+        match rdr {
+            Ok(mut r) => {
+                let mut rd = r.records();
+                for i in rd {
+                    //逐条读取
+                    if let Ok(resu) = i {
+                        let d: CSVDATA = resu.deserialize(None).unwrap();
+                        dat.push(d);
+                    }
+                }
+            }
+            Err(_) => println!("读取csv文件错误！"),
         }
+        HUICE { data: dat }
     }
-(0,0.0,0.0,0.0)
+
+    //fn parse(总数据表:Vec<Row>,单标志序号:u32)->(次数：u32,胜率：f64,盈亏比：f64，单信号累积：f64){}
+    fn parse<T>(&self, tem: Vec<CSVDATA>) -> (u32, f64, f64, f64) {
+        let no = tem.len();
+
+        let mut sum = 0.0;
+        let mut win = 0.0;
+        let mut loss = 0.0;
+        let mut w_sum = 0.0;
+        let mut l_sum = 0.0;
+        for i in tem {
+            l_sum+=i.隔日盈亏;
+            if i.隔日盈亏 > 0.0 {
+                win+=1.0;
+                w_sum+=i.隔日盈亏;
+            } else if i.隔日盈亏 < 0.0 {
+                loss+=1.0;
+                l_sum-=i.隔日盈亏;
+            }
+        }
+        let sl:f64=win  /(win+loss)*100.0;
+        let ykb=w_sum/l_sum;
+        (no as u32, sl, ykb, sum)
+    }
+}
+
+fn main() {
+    let r = HUICE::from_file();
+
+    //let t= r.parse(1);
 }
