@@ -92,10 +92,23 @@ impl HUICE {
             }
         }
         let sl: f64 = win as f64 / (win as f64 + loss as f64) * 100.0;
-        if l_sum == 0.0 {
+        let s_w:f64;
+        let s_l:f64;
+        if win>0{
+            s_w=w_sum/win as f64;
+        }else{
+            s_w=0.0;
+        }
+        if loss>0{
+            s_l=l_sum/loss as f64;
+        }else{
+            s_l=0.0;
+        }
+        
+        if s_l == 0.0 {
             ykb = 100.0;
         } else {
-            ykb = w_sum / l_sum;
+            ykb = s_w / s_l;
         }
 
         (no as u32, win, loss, sl, ykb, sum)
@@ -104,8 +117,8 @@ impl HUICE {
     fn p_out(&self, t: Vec<&CSVDATA>, n: &str) {
         let out = self.parse(t);
         println!(
-            "{}            \t{}\t{}\t{}\t{:.2}\t{:.2}\t{:.2}",
-            n, out.0, out.1, out.2, out.3, out.4, out.5
+            "{}            \t{}\t{}\t{}\t{:.2}\t{:.2}",
+            n, out.0, out.1, out.2, out.3, out.4
         );
     }
 
@@ -426,6 +439,60 @@ impl HUICE {
         }
         self.p_out(tmp, "寒极暖生");
     }
+    fn hanjinuansheng_chun(&self) {
+        let mut tmp = Vec::new();
+        for i in &self.data {
+            if i.寒极暖生 == 1 &&i.春==1 {
+                tmp.push(i);
+            }
+        }
+        self.p_out(tmp, "寒极暖生春");
+    }
+    fn hanjinuansheng_xia(&self) {
+        let mut tmp = Vec::new();
+        for i in &self.data {
+            if i.寒极暖生 == 1 &&i.夏==1 {
+                tmp.push(i);
+            }
+        }
+        self.p_out(tmp, "寒极暖生夏");
+    }
+    fn hanjinuansheng_qiu(&self) {
+        let mut tmp = Vec::new();
+        for i in &self.data {
+            if i.寒极暖生 == 1 && i.秋==1{
+                tmp.push(i);
+            }
+        }
+        self.p_out(tmp, "寒极暖生秋");
+    }
+    fn hanjinuansheng_dong(&self) {
+        let mut tmp = Vec::new();
+        for i in &self.data {
+            if i.寒极暖生 == 1 &&i.冬==1{
+                tmp.push(i);
+            }
+        }
+        self.p_out(tmp, "寒极暖生冬");
+    }
+    fn hanjinuansheng_fu(&self) {
+        let mut tmp = Vec::new();
+        for i in &self.data {
+            if i.寒极暖生 == 1 &&i.伏==1 {
+                tmp.push(i);
+            }
+        }
+        self.p_out(tmp, "寒极暖生伏");
+    }
+    fn hanjinuansheng_la(&self) {
+        let mut tmp = Vec::new();
+        for i in &self.data {
+            if i.寒极暖生 == 1 && i.腊==1{
+                tmp.push(i);
+            }
+        }
+        self.p_out(tmp, "寒极暖生腊");
+    }
     fn yanyanggaozhao(&self) {
         let mut tmp = Vec::new();
         for i in &self.data {
@@ -491,22 +558,38 @@ impl HUICE {
         }
         self.p_out(tmp, "曙光");
     }
+    fn xinhao(&self,n:&i32,name:&str) {
+        let mut tmp = Vec::new();
+        for i in &self.data {
+            if *n == 1 {
+                tmp.push(i);
+            }
+        }
+        self.p_out(tmp, "曙光");
+    }
+ 
 }
 
 fn main() {
     let r = HUICE::from_file();
-    println!("信号             \t总次数\t胜次\t亏次\t胜率\t盈亏比\t单信号累积\t");
-    r.eenn();  
-    r.xiaoe();   
-    r.kushu();
-    r.qiebian();
-    r.dashu();
-    r.gaoyaji();
-    r.meiyumo();
-    r.qingkongwanli();
-    r.bingxuexiaorong();
-    r.jidishuguang();
+    println!("信号             \t总次数\t胜次\t亏次\t胜率\t盈亏比");
+  //  r.eenn();  
+  //  r.xiaoe();   
+ //   r.kushu();
+  //  r.qiebian();
+  //  r.dashu();
+ //   r.gaoyaji();
+ //   r.meiyumo();
+ //   r.qingkongwanli();
+  //  r.bingxuexiaorong();
+  //  r.jidishuguang();
     r.hanjinuansheng();
+    r.hanjinuansheng_chun();
+    r.hanjinuansheng_xia();
+    r.hanjinuansheng_qiu();
+    r.hanjinuansheng_dong();
+    r.hanjinuansheng_fu();
+    r.hanjinuansheng_la();
     r.yanyanggaozhao();
     r.gaoqiya();
     r.haishishenlou();
