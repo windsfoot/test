@@ -496,11 +496,8 @@ impl HUICE {
 fn main() {
     let r = HUICE::from_file();
     println!("信号             \t总次数\t胜次\t亏次\t胜率\t盈亏比\t单信号累积\t");
-
-    r.eenn();
-    
-    r.xiaoe();
-    
+    r.eenn();  
+    r.xiaoe();   
     r.kushu();
     r.qiebian();
     r.dashu();
@@ -509,7 +506,6 @@ fn main() {
     r.qingkongwanli();
     r.bingxuexiaorong();
     r.jidishuguang();
-    
     r.hanjinuansheng();
     r.yanyanggaozhao();
     r.gaoqiya();
