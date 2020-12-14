@@ -573,23 +573,18 @@ impl HUICE {
 fn main() {
     let r = HUICE::from_file();
     println!("信号             \t总次数\t胜次\t亏次\t胜率\t盈亏比");
-  //  r.eenn();  
-  //  r.xiaoe();   
- //   r.kushu();
-  //  r.qiebian();
-  //  r.dashu();
- //   r.gaoyaji();
- //   r.meiyumo();
- //   r.qingkongwanli();
-  //  r.bingxuexiaorong();
-  //  r.jidishuguang();
+    r.eenn();  
+    r.xiaoe();   
+    r.kushu();
+    r.qiebian();
+    r.dashu();
+    r.gaoyaji();
+    r.meiyumo();
+    r.qingkongwanli();
+    r.bingxuexiaorong();
+    r.jidishuguang();
     r.hanjinuansheng();
-    r.hanjinuansheng_chun();
-    r.hanjinuansheng_xia();
-    r.hanjinuansheng_qiu();
-    r.hanjinuansheng_dong();
-    r.hanjinuansheng_fu();
-    r.hanjinuansheng_la();
+    
     r.yanyanggaozhao();
     r.gaoqiya();
     r.haishishenlou();
@@ -609,6 +604,12 @@ fn main() {
     r.xiaoe_dong();
     r.xiaoe_fu();
     r.xiaoe_la();
+    r.hanjinuansheng_chun();
+    r.hanjinuansheng_xia();
+    r.hanjinuansheng_qiu();
+    r.hanjinuansheng_dong();
+    r.hanjinuansheng_fu();
+    r.hanjinuansheng_la();
     r.jidishuguang_chun();
     r.jidishuguang_xia();
     r.jidishuguang_qiu();
